@@ -13,6 +13,8 @@ let numberA = "0";
 let numberB = null;
 let currentOperator = null;
 let lastActionWasEqual = false;
+let lastOperator = null;
+let lastNumberB = null;
 
 const MAXDIGITS = 12;
 const audio = document.getElementById("audio");
@@ -51,6 +53,9 @@ function operate(a, b, operator) {
 
 function calculate() {
   if (numberA !== null && numberB !== null && currentOperator) {
+    lastOperator = currentOperator;
+    lastNumberB = numberB;
+
     const result = operate(
       parseFloat(numberA),
       parseFloat(numberB),
@@ -61,26 +66,17 @@ function calculate() {
 }
 
 // helper functions
-async function play() {
-  await Tone.start();
-  const player = new Tone.Player({
-    url: "assets/click.mp3",
-    loop: false,
-    autostart: false,
-  });
-  await Tone.loaded();
-  const randomPitch = Math.floor(Math.random() * 6); // Random pitch shift between -6 and +6 semitones
-  const pitchShift = new Tone.PitchShift({
-    pitch: -randomPitch,
-  }).toDestination();
-  player.connect(pitchShift);
-  player.start();
+function play() {
+  audio.currentTime = 0; // Reset audio to start
+  audio.play();
 }
 
 function resetDisplay() {
   numberA = "0";
   numberB = null;
   currentOperator = null;
+  lastOperator = null;
+  lastNumberB = null;
   inputNumbers.innerText = "0";
   inputOperators.innerText = "";
 }
@@ -164,6 +160,11 @@ allButtons.forEach((button) => {
 
 buttonEqual.addEventListener("mousedown", () => {
   if (numberA !== null && numberB !== null && currentOperator) {
+    calculate();
+    lastActionWasEqual = true;
+  } else if (lastActionWasEqual && lastOperator && lastNumberB) {
+    numberB = lastNumberB;
+    currentOperator = lastOperator;
     calculate();
     lastActionWasEqual = true;
   }
