@@ -26,12 +26,21 @@ function resetDisplay() {
 }
 
 function updateDisplay() {
-  const inputString = inputArrayNumberA.join("");
-  inputNumbers.innerHTML = inputString ? inputString : "0";
-  inputOperatos.innerHTML = inputArrayOperators[0]
-    ? inputArrayOperators[0]
-    : "";
-  console.log(inputArrayNumberA);
+  const inputStringA = inputArrayNumberA.join("");
+  const inputStringB = inputArrayNumberB.join("");
+
+  if (inputArrayNumberB.length === 0) {
+    inputNumbers.innerHTML = inputStringA ? inputStringA : "0";
+    inputOperatos.innerHTML = inputArrayOperators[0]
+      ? inputArrayOperators[0]
+      : "";
+  } else {
+    inputNumbers.innerHTML = inputStringB ? inputStringB : "0";
+    inputOperatos.innerHTML = "";
+  }
+
+  console.log("Input A", inputArrayNumberA);
+  console.log("Input B", inputArrayNumberB);
 }
 
 function handleArrayInput(array, input) {
@@ -58,6 +67,13 @@ buttonAllClear.addEventListener("click", () => {
 });
 
 buttonErase.addEventListener("click", () => {
+  if (inputArrayNumberB.length > 0) {
+    inputArrayNumberB.pop();
+    if (inputArrayNumberB[inputArrayNumberB.length - 1] === 0)
+      inputArrayNumberA.length = 0;
+    updateDisplay();
+    return;
+  }
   if (inputArrayOperators.length === 1) {
     inputArrayOperators.pop();
     updateDisplay();
@@ -75,7 +91,8 @@ buttonsOperators.forEach((button) => {
   button.addEventListener("click", (e) => {
     const operator = e.target.getAttribute("data-operator");
     if (inputArrayNumberA.length > 0) {
-      inputArrayOperators.splice(-1, 1, operator);
+      inputArrayOperators.length = 0;
+      inputArrayOperators.push(operator);
       updateDisplay();
     }
   });
