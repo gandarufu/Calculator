@@ -100,9 +100,14 @@ function updateDisplay() {
 
 function handleResult(result) {
   resetDisplay();
-  if (result.toString().length > MAXDIGITS) {
-    result = result.toString().slice(0, MAXDIGITS + 1);
+  // results with decimal point
+  if (result.toString().includes(".")) {
+    if (result.toString().length > MAXDIGITS) {
+      result = result.toString().slice(0, MAXDIGITS + 1);
+    }
   }
+  // results without decimal point
+
   // push result as single sting elements to inputArrayNumberA
   inputArrayNumberA.length = 0;
   for (let i = 0; i < result.toString().length; i++) {
