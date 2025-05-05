@@ -6,13 +6,13 @@ const buttonPlusMinus = document.querySelector("#plusminus");
 const buttonErase = document.querySelector("#erase");
 const buttonEqual = document.querySelector("#equal");
 
-const operators = ["+", "-", "x", "/"];
 const inputNumbers = document.querySelector(".input-numbers");
 const inputOperators = document.querySelector(".input-operators");
 
 let numberA = "0";
 let numberB = null;
 let currentOperator = null;
+let lastActionWasEqual = false;
 
 const MAXDIGITS = 12;
 const audio = document.getElementById("audio");
@@ -69,7 +69,7 @@ async function play() {
     autostart: false,
   });
   await Tone.loaded();
-  const randomPitch = Math.floor(Math.random() * 10); // Random pitch shift between -6 and +6 semitones
+  const randomPitch = Math.floor(Math.random() * 6); // Random pitch shift between -6 and +6 semitones
   const pitchShift = new Tone.PitchShift({
     pitch: -randomPitch,
   }).toDestination();
@@ -130,6 +130,11 @@ function handleResult(result) {
 }
 
 function handleNumberInput(input) {
+  if (lastActionWasEqual) {
+    numberA = "";
+    lastActionWasEqual = false;
+  }
+
   let target = currentOperator ? "numberB" : "numberA";
   let currentValue = (target === "numberA" ? numberA : numberB) || "";
 
@@ -160,12 +165,18 @@ allButtons.forEach((button) => {
 buttonEqual.addEventListener("mousedown", () => {
   if (numberA !== null && numberB !== null && currentOperator) {
     calculate();
+    lastActionWasEqual = true;
   }
 });
 
 buttonAllClear.addEventListener("mousedown", resetDisplay);
 
 buttonErase.addEventListener("mousedown", () => {
+  if (lastActionWasEqual) {
+    resetDisplay();
+    return;
+  }
+
   if (numberB !== null) {
     numberB = numberB.slice(0, -1) || null;
   } else if (currentOperator) {
@@ -183,9 +194,14 @@ buttonErase.addEventListener("mousedown", () => {
 });
 
 buttonPlusMinus.addEventListener("mousedown", () => {
+  if (lastActionWasEqual) {
+    // resetDisplay();
+    return;
+  }
+
   if (currentOperator && numberB !== null) {
     numberB = toggleSign(numberB);
-  } else if (!currentOperator && numberA !== null) {
+  } else if (!currentOperator && parseFloat(numberA) !== null) {
     numberA = toggleSign(numberA);
   }
   updateDisplay();
@@ -207,6 +223,8 @@ buttonsOperators.forEach((button) => {
   button.addEventListener("mousedown", (e) => {
     const operator = e.target.getAttribute("data-operator");
     if (!operator) return;
+
+    lastActionWasEqual = false;
 
     if (numberA !== null && numberB !== null) {
       calculate();
