@@ -1,3 +1,4 @@
+const allButtons = document.querySelectorAll(".btn");
 const buttonsNumbers = document.querySelectorAll(".num");
 const buttonsOperators = document.querySelectorAll(".operator");
 const buttonAllClear = document.querySelector("#allclear");
@@ -14,6 +15,7 @@ let numberB = null;
 let currentOperator = null;
 
 const MAXDIGITS = 12;
+const audio = document.getElementById("audio");
 
 resetDisplay();
 
@@ -58,6 +60,23 @@ function calculate() {
   }
 }
 
+// helper functions
+async function play() {
+  await Tone.start();
+  const player = new Tone.Player({
+    url: "assets/click.mp3",
+    loop: false,
+    autostart: false,
+  });
+  await Tone.loaded();
+  const randomPitch = Math.floor(Math.random() * 10); // Random pitch shift between -6 and +6 semitones
+  const pitchShift = new Tone.PitchShift({
+    pitch: -randomPitch,
+  }).toDestination();
+  player.connect(pitchShift);
+  player.start();
+}
+
 function resetDisplay() {
   numberA = "0";
   numberB = null;
@@ -92,7 +111,7 @@ function handleResult(result) {
 
   let formattedResult = result;
   if (typeof result === "number") {
-    if (Math.abs(result) > 1e12) {
+    if (Math.abs(result) > 1e11) {
       formattedResult = result.toExponential(MAXDIGITS - 7);
     } else if (
       result.toString().includes(".") &&
@@ -117,6 +136,7 @@ function handleNumberInput(input) {
   if (input === "." && currentValue.includes(".")) return;
   if (input === "." && currentValue === "") currentValue = "0.";
   if (input !== "." && currentValue === "0") currentValue = "";
+  if (currentValue.includes("e+")) return;
   if (currentValue.replace(".", "").length >= MAXDIGITS) return;
 
   currentValue += input;
@@ -131,6 +151,12 @@ function handleNumberInput(input) {
 }
 
 // Event listeners
+allButtons.forEach((button) => {
+  button.addEventListener("mousedown", (e) => {
+    play();
+  });
+});
+
 buttonEqual.addEventListener("mousedown", () => {
   if (numberA !== null && numberB !== null && currentOperator) {
     calculate();
@@ -170,8 +196,10 @@ function toggleSign(value) {
   if (value === "0" || value === "-0") return "0";
   let newValue = value.startsWith("-") ? value.slice(1) : "-" + value;
 
-  // Reject if it overflows
-  if (newValue.length > MAXDIGITS) return value;
+  const adjustedLimit = newValue.toString().includes(".")
+    ? MAXDIGITS + 1
+    : MAXDIGITS;
+  if (newValue.length > adjustedLimit) return value;
   return newValue;
 }
 
