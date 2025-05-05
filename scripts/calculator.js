@@ -33,7 +33,6 @@ function divide(a, b) {
 }
 
 function operate(a, b, operator) {
-  // handle <span class='dot'>.</span> as a decimal point
   a = a.map((item) => {
     if (item === "<span class='dot'>.</span>") return ".";
     return item;
@@ -96,6 +95,7 @@ function updateDisplay() {
     inputNumbers.innerHTML = inputStringB ? inputStringB : "0";
     inputOperatos.innerHTML = "";
   }
+  console.log(inputArrayNumberA);
 }
 
 function handleResult(result) {
@@ -157,6 +157,10 @@ buttonErase.addEventListener("mousedown", () => {
     return;
   }
   if (inputArrayNumberA.length > 0) {
+    // set to 0 if minus sign is the only element in the array
+    if (inputArrayNumberA.length === 2 && inputArrayNumberA[0] === "-") {
+      inputArrayNumberA.length = 0;
+    }
     inputArrayNumberA.pop();
     if (inputArrayNumberA[inputArrayNumberA.length - 1] === 0)
       inputArrayNumberA.length = 0;
@@ -175,16 +179,7 @@ buttonsOperators.forEach((button) => {
       inputArrayOperators.length = 0;
       inputArrayOperators.push(operator);
       updateDisplay();
-    } else
-      console.log(
-        "Error",
-        "inputArrayNumberA:",
-        inputArrayNumberA,
-        "inputArrayNumberB:",
-        inputArrayNumberB,
-        "inputArrayOperators:",
-        inputArrayOperators
-      );
+    }
   });
 });
 
