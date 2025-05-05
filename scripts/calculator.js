@@ -12,11 +12,65 @@ const inputArrayNumberA = [];
 const inputArrayNumberB = [];
 const inputArrayOperators = [];
 
-const MAXDIGITS = 13;
+const MAXDIGITS = 12;
 
 //  initialize
 resetDisplay();
 
+// math functions
+function add(a, b) {
+  return a + b;
+}
+function subtract(a, b) {
+  return a - b;
+}
+function multiply(a, b) {
+  return a * b;
+}
+function divide(a, b) {
+  if (b === 0) return "Error";
+  return a / b;
+}
+
+function operate(a, b, operator) {
+  // handle <span class='dot'>.</span> as a decimal point
+  a = a.map((item) => {
+    if (item === "<span class='dot'>.</span>") return ".";
+    return item;
+  });
+  b = b.map((item) => {
+    if (item === "<span class='dot'>.</span>") return ".";
+    return item;
+  });
+
+  a = parseFloat(a.join(""));
+  b = parseFloat(b.join(""));
+
+  console.log(`${a} ${operator} ${b}`);
+  switch (operator) {
+    case "+":
+      return add(a, b);
+    case "-":
+      return subtract(a, b);
+    case "x":
+      return multiply(a, b);
+    case "/":
+      return divide(a, b);
+    default:
+      return "Error";
+  }
+}
+
+function calculate() {
+  if (inputArrayNumberA.length > 0 && inputArrayNumberB.length > 0) {
+    const operator = inputArrayOperators[0];
+    const result = operate(inputArrayNumberA, inputArrayNumberB, operator);
+    console.log("=", result);
+    handleResult(result);
+  }
+}
+
+// helper functions
 function resetDisplay() {
   inputArrayNumberA.length = 0;
   inputArrayNumberB.length = 0;
@@ -26,8 +80,12 @@ function resetDisplay() {
 }
 
 function updateDisplay() {
-  const inputStringA = inputArrayNumberA.join("");
-  const inputStringB = inputArrayNumberB.join("");
+  const inputStringA = inputArrayNumberA
+    .join("")
+    .replace(".", "<span class='dot'>.</span>");
+  const inputStringB = inputArrayNumberB
+    .join("")
+    .replace(".", "<span class='dot'>.</span>");
 
   if (inputArrayNumberB.length === 0) {
     inputNumbers.innerHTML = inputStringA ? inputStringA : "0";
@@ -38,22 +96,35 @@ function updateDisplay() {
     inputNumbers.innerHTML = inputStringB ? inputStringB : "0";
     inputOperatos.innerHTML = "";
   }
+}
 
-  console.log("Input A", inputArrayNumberA);
-  console.log("Input B", inputArrayNumberB);
+function handleResult(result) {
+  resetDisplay();
+  if (result.toString().length > MAXDIGITS) {
+    result = result.toString().slice(0, MAXDIGITS + 1);
+  }
+  // push result as single sting elements to inputArrayNumberA
+  inputArrayNumberA.length = 0;
+  for (let i = 0; i < result.toString().length; i++) {
+    inputArrayNumberA.push(result.toString()[i]);
+  }
+  // inputArrayNumberA.push(result);
+  inputArrayNumberB.length = 0;
+  updateDisplay();
 }
 
 function handleArrayInput(array, input) {
-  if (array.length < MAXDIGITS) {
+  const maxLength = array.includes(".") ? MAXDIGITS + 1 : MAXDIGITS;
+  if (array.length < maxLength) {
     if (input === ".") {
-      if (array.includes("<span class='dot'>.</span>")) return;
+      if (array.includes(".")) return;
       if (array.length === 0) {
         array.push(0);
-        array.push("<span class='dot'>.</span>");
+        array.push(".");
         updateDisplay();
         return;
       }
-      array.push("<span class='dot'>.</span>");
+      array.push(".");
       updateDisplay();
       return;
     } else array.push(input);
@@ -62,11 +133,17 @@ function handleArrayInput(array, input) {
 }
 
 // event listeners
-buttonAllClear.addEventListener("click", () => {
+buttonEqual.addEventListener("mousedown", () => {
+  if (inputArrayNumberA.length > 0 && inputArrayNumberB.length > 0) {
+    calculate();
+  }
+});
+
+buttonAllClear.addEventListener("mousedown", () => {
   resetDisplay();
 });
 
-buttonErase.addEventListener("click", () => {
+buttonErase.addEventListener("mousedown", () => {
   if (inputArrayNumberB.length > 0) {
     inputArrayNumberB.pop();
     if (inputArrayNumberB[inputArrayNumberB.length - 1] === 0)
@@ -88,18 +165,31 @@ buttonErase.addEventListener("click", () => {
 });
 
 buttonsOperators.forEach((button) => {
-  button.addEventListener("click", (e) => {
+  button.addEventListener("mousedown", (e) => {
     const operator = e.target.getAttribute("data-operator");
-    if (inputArrayNumberA.length > 0) {
+    if (
+      inputArrayNumberA.length > 0 &&
+      inputArrayNumberB.length === 0 &&
+      operator
+    ) {
       inputArrayOperators.length = 0;
       inputArrayOperators.push(operator);
       updateDisplay();
-    }
+    } else
+      console.log(
+        "Error",
+        "inputArrayNumberA:",
+        inputArrayNumberA,
+        "inputArrayNumberB:",
+        inputArrayNumberB,
+        "inputArrayOperators:",
+        inputArrayOperators
+      );
   });
 });
 
 buttonsNumbers.forEach((button) => {
-  button.addEventListener("click", (e) => {
+  button.addEventListener("mousedown", (e) => {
     const input = e.target.innerText;
     switch (inputArrayOperators.length) {
       case 0:
