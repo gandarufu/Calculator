@@ -2,42 +2,80 @@ const buttonsNumbers = document.querySelectorAll(".num");
 const buttonsOperators = document.querySelectorAll(".operator");
 const buttonAllClear = document.querySelector("#allclear");
 const buttonPlusMinus = document.querySelector("#plusminus");
-const buttonPercent = document.querySelector("#percent");
+const buttonErase = document.querySelector("#erase");
 const buttonEqual = document.querySelector("#equal");
 
-const inputDisplay = document.querySelector(".input-display");
-const inputArray = [];
+const operators = ["+", "-", "x", "/"];
+const inputNumbers = document.querySelector(".input-numbers");
+const inputOperatos = document.querySelector(".input-operators");
+const inputArrayNumberA = [];
+const inputArrayNumberB = [];
+const inputArrayOperators = [];
 
-const MAXDIGITS = 12;
+const MAXDIGITS = 13;
 
+//  initialize
 resetDisplay();
-// EventListeners
 
 function resetDisplay() {
-  inputArray.length = 0;
-  inputDisplay.innerText = "0";
+  inputArrayNumberA.length = 0;
+  inputArrayNumberB.length = 0;
+  inputArrayOperators.length = 0;
+  inputNumbers.innerText = "0";
+  inputOperatos.innerText = "";
 }
 
+function updateDisplay() {
+  const inputString = inputArrayNumberA.join("");
+  inputNumbers.innerHTML = inputString ? inputString : "0";
+  inputOperatos.innerHTML = inputArrayOperators[0]
+    ? inputArrayOperators[0]
+    : "";
+  console.log(inputArrayNumberA);
+}
+
+// event listeners
 buttonAllClear.addEventListener("click", () => {
   resetDisplay();
 });
 
+buttonErase.addEventListener("click", () => {
+  if (inputArrayOperators.length === 1) {
+    inputArrayOperators.pop();
+    updateDisplay();
+
+    return;
+  }
+  if (inputArrayNumberA.length > 0) {
+    inputArrayNumberA.pop();
+    updateDisplay();
+  }
+});
+
+buttonsOperators.forEach((button) => {
+  button.addEventListener("click", (e) => {
+    const operator = e.target.getAttribute("data-operator");
+    if (inputArrayNumberA.length > 0) {
+      inputArrayOperators.splice(-1, 1, operator);
+      updateDisplay();
+    }
+  });
+});
+
 buttonsNumbers.forEach((button) => {
   button.addEventListener("click", (e) => {
-    const value = e.target.innerText;
-    const inputLength = inputArray.includes("<span class='dot'>.</span>")
-      ? inputArray.length - 1
-      : inputArray.length;
-    if (inputLength < MAXDIGITS) {
+    const input = e.target.innerText;
+    if (inputArrayNumberA.length < MAXDIGITS) {
       // only one dot
-      if (value === "." && inputArray.includes("<span class='dot'>.</span>"))
+      if (
+        input === "." &&
+        inputArrayNumberA.includes("<span class='dot'>.</span>")
+      )
         return;
-      if (value === ".")
-        inputArray.push("<span class='dot'>" + value + "</span>");
-      else inputArray.push(value);
-      // console.log(inputArray);
-      const inputString = inputArray.join("");
-      inputDisplay.innerHTML = inputString;
+      if (input === ".")
+        inputArrayNumberA.push("<span class='dot'>" + input + "</span>");
+      else inputArrayNumberA.push(input);
+      updateDisplay();
     }
   });
 });

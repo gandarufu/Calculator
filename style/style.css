@@ -28,7 +28,7 @@ body {
   box-sizing: border-box;
   background: #300000;
   color: #ff3030;
-  font-size: 1.4rem;
+  font-size: 1.37rem;
   text-align: right;
   padding: 12px;
   border-radius: 5px;
@@ -44,15 +44,19 @@ body {
   position: absolute;
   top: 0;
   right: -0.25rem;
-  /* text-align: right; */
   padding: 12px;
   opacity: 0.2;
 }
 
-.input-display {
-  margin-right: -0.25rem;
-  /* position: relative; */
-  /* background-color: red; */
+.input-numbers {
+  margin-right: 1rem;
+}
+
+.input-operators {
+  position: absolute;
+  top: 0;
+  right: -0.25rem;
+  padding: 12px;
 }
 
 .dot {
