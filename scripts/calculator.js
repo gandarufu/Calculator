@@ -36,7 +36,7 @@ function divide(a, b) {
 }
 
 function operate(a, b, operator) {
-  console.log(`${a} ${operator} ${b}`);
+  // console.log(`${a} ${operator} ${b}`);
   switch (operator) {
     case "+":
       return add(a, b);
@@ -96,7 +96,7 @@ function updateDisplay() {
   const displayValue = numberB !== null ? numberB : numberA;
   inputNumbers.innerHTML = formatNumberForDisplay(displayValue);
   inputOperators.innerHTML = numberB !== null ? "" : currentOperator;
-  console.log({ numberA, currentOperator, numberB });
+  // console.log({ numberA, currentOperator, numberB });
 }
 
 function handleResult(result) {
