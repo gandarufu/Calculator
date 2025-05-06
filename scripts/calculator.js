@@ -236,21 +236,86 @@ allButtons.forEach((button) => {
     play();
   });
 });
-
 buttonEqual.addEventListener("mousedown", handleEqualClick);
-
 buttonAllClear.addEventListener("mousedown", resetDisplay);
-
 buttonErase.addEventListener("mousedown", handleEraseClick);
-
 buttonPlusMinus.addEventListener("mousedown", handlePlusMinusClick);
-
 buttonsOperators.forEach((button) => {
   button.addEventListener("mousedown", (e) => handleOperatorClick(e));
 });
-
 buttonsNumbers.forEach((button) => {
   button.addEventListener("mousedown", (e) =>
     handleNumberInput(e.target.innerText)
   );
 });
+
+// Add keyboard support for calculator
+document.addEventListener("keydown", handleKeyPress);
+
+// Map keyboard keys to calculator functions
+function handleKeyPress(e) {
+  // Prevent default actions
+  if (
+    /^[0-9.+\-*/=\r\n\s]$/.test(e.key) ||
+    e.key === "Backspace" ||
+    e.key === "Delete" ||
+    e.key === "Escape"
+  ) {
+    e.preventDefault();
+  }
+
+  play();
+
+  // Map number keys
+  if (/^[0-9.]$/.test(e.key)) {
+    handleNumberInput(e.key);
+    return;
+  }
+
+  // Map operators
+  switch (e.key) {
+    case "+":
+      simulateOperatorClick("+");
+      break;
+    case "-":
+      simulateOperatorClick("-");
+      break;
+    case "*":
+    case "x":
+      simulateOperatorClick("x");
+      break;
+    case "/":
+      simulateOperatorClick("/");
+      break;
+
+    case "=":
+    case "Enter":
+      handleEqualClick();
+      break;
+
+    case "Escape":
+      resetDisplay();
+      break;
+
+    case "Backspace":
+    case "Delete":
+      handleEraseClick();
+      break;
+
+    case "p":
+    case "`":
+      handlePlusMinusClick();
+      break;
+  }
+}
+
+// Helper function to simulate operator button click
+function simulateOperatorClick(operatorSymbol) {
+  const operatorButtons = document.querySelectorAll(".operator");
+  for (const button of operatorButtons) {
+    if (button.getAttribute("data-operator") === operatorSymbol) {
+      handleOperatorClick({ target: button });
+      return;
+    }
+  }
+}
