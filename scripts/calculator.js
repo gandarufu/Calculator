@@ -256,10 +256,11 @@ document.addEventListener("keydown", handleKeyPress);
 function handleKeyPress(e) {
   // Prevent default actions
   if (
-    /^[0-9.+\-*/=\r\n\s]$/.test(e.key) ||
+    /^[0-9.+\-*/=]$/.test(e.key) ||
     e.key === "Backspace" ||
     e.key === "Delete" ||
-    e.key === "Escape"
+    e.key === "Escape" ||
+    e.key === "p"
   ) {
     e.preventDefault();
     play();
