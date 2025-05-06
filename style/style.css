@@ -1,7 +1,7 @@
 @font-face {
   font-family: "DSEG14ClassicRegular";
-  src: url("../fonts/DSEG14Classic-Regular.woff") format("woff"),
-    url("../fonts/DSEG14Classic-Regular.ttf") format("truetype");
+  src: url("DSEG14Classic-Regular.woff") format("woff"),
+    url("DSEG14Classic-Regular.ttf") format("truetype");
   font-display: swap;
   font-weight: normal;
   font-style: normal;
