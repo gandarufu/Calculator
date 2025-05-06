@@ -265,47 +265,63 @@ function handleKeyPress(e) {
   }
 
   play();
+  let buttonPressed = null;
 
   // Map number keys
   if (/^[0-9.]$/.test(e.key)) {
+    buttonPressed = [...buttonsNumbers].find((btn) => btn.innerText === e.key);
     handleNumberInput(e.key);
-    return;
   }
 
   // Map operators
   switch (e.key) {
     case "+":
-      simulateOperatorClick("+");
-      break;
     case "-":
-      simulateOperatorClick("-");
+    case "/":
+      buttonPressed = [...buttonsOperators].find(
+        (btn) => btn.getAttribute("data-operator") === e.key
+      );
+      simulateOperatorClick(e.key);
       break;
     case "*":
     case "x":
+      buttonPressed = [...buttonsOperators].find(
+        (btn) => btn.getAttribute("data-operator") === "x"
+      );
       simulateOperatorClick("x");
-      break;
-    case "/":
-      simulateOperatorClick("/");
       break;
 
     case "=":
     case "Enter":
+      buttonPressed = buttonEqual;
       handleEqualClick();
       break;
 
     case "Escape":
+      buttonPressed = buttonAllClear;
       resetDisplay();
       break;
 
     case "Backspace":
     case "Delete":
+      buttonPressed = buttonErase;
       handleEraseClick();
       break;
 
     case "p":
     case "`":
+      buttonPressed = buttonPlusMinus;
       handlePlusMinusClick();
       break;
+  }
+
+  // Add active class to simulate button press
+  if (buttonPressed) {
+    buttonPressed.classList.add("active");
+
+    setTimeout(() => {
+      buttonPressed.classList.remove("active");
+    }, 100);
   }
 }
 
