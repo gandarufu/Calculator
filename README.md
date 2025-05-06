@@ -2,8 +2,8 @@
 
 An interactive calculator built with JavaScript, HTML, and CSS. This project recreates a retro calculator experience with enhanced visual and interactive elements.
 
-Live-Preview:
-[Live Demo 🚀](https://gandarufu.github.io/Calculator/)
+🚀Live-Preview🚀
+[Calculator](https://gandarufu.github.io/Calculator/)
 
 ![Calculator Preview](/assets/preview.JPG)
 
