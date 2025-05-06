@@ -262,9 +262,9 @@ function handleKeyPress(e) {
     e.key === "Escape"
   ) {
     e.preventDefault();
+    play();
   }
 
-  play();
   let buttonPressed = null;
 
   // Map number keys
