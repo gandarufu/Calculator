@@ -71,6 +71,18 @@ function play() {
   audio.play();
 }
 
+function toggleSign(value) {
+  if (!value) return "0";
+  if (value === "0" || value === "-0") return "0";
+  let newValue = value.startsWith("-") ? value.slice(1) : "-" + value;
+
+  const adjustedLimit = newValue.toString().includes(".")
+    ? MAXDIGITS + 1
+    : MAXDIGITS;
+  if (newValue.length > adjustedLimit) return value;
+  return newValue;
+}
+
 function resetDisplay() {
   numberA = "0";
   numberB = null;
@@ -79,7 +91,6 @@ function resetDisplay() {
   lastNumberB = null;
   inputNumbers.innerText = "0";
   inputOperators.innerText = "";
-  // console.log({ numberA, currentOperator, numberB });
 }
 
 function formatNumberForDisplay(num) {
@@ -157,14 +168,8 @@ function handleNumberInput(input) {
   updateDisplay();
 }
 
-// Event listeners
-allButtons.forEach((button) => {
-  button.addEventListener("mousedown", (e) => {
-    play();
-  });
-});
-
-buttonEqual.addEventListener("mousedown", () => {
+// handlers
+function handleEqualClick() {
   if (numberA !== null && numberB !== null && currentOperator) {
     calculate();
     lastActionWasEqual = true;
@@ -174,11 +179,9 @@ buttonEqual.addEventListener("mousedown", () => {
     calculate();
     lastActionWasEqual = true;
   }
-});
+}
 
-buttonAllClear.addEventListener("mousedown", resetDisplay);
-
-buttonErase.addEventListener("mousedown", () => {
+function handleEraseClick() {
   if (lastActionWasEqual) {
     resetDisplay();
     return;
@@ -198,51 +201,56 @@ buttonErase.addEventListener("mousedown", () => {
     numberA = "0";
   }
   updateDisplay();
-});
+}
 
-buttonPlusMinus.addEventListener("mousedown", () => {
-  // if (lastActionWasEqual) {
-  //   return;
-  // }
-
+function handlePlusMinusClick() {
   if (currentOperator && numberB !== null) {
     numberB = toggleSign(numberB);
   } else if (!currentOperator && parseFloat(numberA) !== null) {
     numberA = toggleSign(numberA);
   }
   updateDisplay();
-});
-
-function toggleSign(value) {
-  if (!value) return "0";
-  if (value === "0" || value === "-0") return "0";
-  let newValue = value.startsWith("-") ? value.slice(1) : "-" + value;
-
-  const adjustedLimit = newValue.toString().includes(".")
-    ? MAXDIGITS + 1
-    : MAXDIGITS;
-  if (newValue.length > adjustedLimit) return value;
-  return newValue;
 }
 
-buttonsOperators.forEach((button) => {
+function handleOperatorClick(e) {
+  const operator = e.target.getAttribute("data-operator");
+  if (!operator) return;
+
+  lastActionWasEqual = false;
+
+  if (numberA !== null && numberB !== null) {
+    calculate();
+  }
+
+  currentOperator = operator;
+  updateDisplay();
+}
+
+function handleNumbersClick(e) {
+  handleNumberInput(e.target.innerText);
+}
+
+// Event listeners
+allButtons.forEach((button) => {
   button.addEventListener("mousedown", (e) => {
-    const operator = e.target.getAttribute("data-operator");
-    if (!operator) return;
-
-    lastActionWasEqual = false;
-
-    if (numberA !== null && numberB !== null) {
-      calculate();
-    }
-
-    currentOperator = operator;
-    updateDisplay();
+    play();
   });
+});
+
+buttonEqual.addEventListener("mousedown", handleEqualClick);
+
+buttonAllClear.addEventListener("mousedown", resetDisplay);
+
+buttonErase.addEventListener("mousedown", handleEraseClick);
+
+buttonPlusMinus.addEventListener("mousedown", handlePlusMinusClick);
+
+buttonsOperators.forEach((button) => {
+  button.addEventListener("mousedown", (e) => handleOperatorClick(e));
 });
 
 buttonsNumbers.forEach((button) => {
-  button.addEventListener("mousedown", (e) => {
-    handleNumberInput(e.target.innerText);
-  });
+  button.addEventListener("mousedown", (e) =>
+    handleNumberInput(e.target.innerText)
+  );
 });
