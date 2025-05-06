@@ -79,6 +79,7 @@ function resetDisplay() {
   lastNumberB = null;
   inputNumbers.innerText = "0";
   inputOperators.innerText = "";
+  // console.log({ numberA, currentOperator, numberB });
 }
 
 function formatNumberForDisplay(num) {
@@ -128,6 +129,7 @@ function handleResult(result) {
 function handleNumberInput(input) {
   if (lastActionWasEqual) {
     numberA = "";
+    currentOperator = null;
     lastActionWasEqual = false;
   }
 
@@ -137,10 +139,14 @@ function handleNumberInput(input) {
   if (input === "." && currentValue.includes(".")) return;
   if (input === "." && currentValue === "") currentValue = "0.";
   if (input !== "." && currentValue === "0") currentValue = "";
-  if (currentValue.includes("e+")) return;
   if (currentValue.replace(".", "").length >= MAXDIGITS) return;
 
   currentValue += input;
+
+  // make sure only one dot is present
+  if (currentValue.split(".").length > 2) {
+    currentValue = currentValue.replace(/\.+$/, ".");
+  }
 
   if (target === "numberA") {
     numberA = currentValue;
@@ -195,10 +201,9 @@ buttonErase.addEventListener("mousedown", () => {
 });
 
 buttonPlusMinus.addEventListener("mousedown", () => {
-  if (lastActionWasEqual) {
-    // resetDisplay();
-    return;
-  }
+  // if (lastActionWasEqual) {
+  //   return;
+  // }
 
   if (currentOperator && numberB !== null) {
     numberB = toggleSign(numberB);

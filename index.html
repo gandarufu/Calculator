@@ -1,51 +1,88 @@
 <!DOCTYPE html>
+
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
     <link rel="stylesheet" href="style/style.css" />
     <script src="scripts/calculator.js" defer></script>
     <title>ODIN Calculator</title>
   </head>
+
   <body>
+    <div class="overlay opacitystrong"></div>
     <div class="container">
-      <div class="datamath">
-        <div class="screen">
-          <!-- <span class="zeros"></span> -->
-          <div class="input-numbers"></div>
-          <div class="input-operators"></div>
-          <div class="input-background">888888888888*</div>
-        </div>
-        <div class="buttons">
-          <button class="btn brown" id="allclear">
-            <i>AC</i>
-          </button>
-          <button class="btn brown" id="erase"><i>←</i></button>
-          <button class="btn brown" id="plusminus"><i>+/-</i></button>
-          <button class="btn brown operator" data-operator="/"><i>÷</i></button>
+      <div class="datamath-body">
+        <div class="overlay opacityweak"></div>
+        <div class="datamath-main">
+          <div class="screen">
+            <!-- <span class="zeros"></span> -->
+            <div class="input-numbers"></div>
+            <div class="input-operators"></div>
+            <div class="input-background">888888888888*</div>
+          </div>
+          <div class="spacer"></div>
+          <div class="buttoncontainer">
+            <div class="logo-text">
+              <img src="assets/odinText.svg" />
+            </div>
+            <div class="buttons">
+              <button class="btn brown" id="allclear">
+                <i>AC</i>
+              </button>
+              <button class="btn brown" id="erase"><i>←</i></button>
+              <button class="btn brown" id="plusminus"><i>+/-</i></button>
+              <button class="btn brown operator" data-operator="/">
+                <i>÷</i>
+              </button>
 
-          <button class="btn black num"><i>7</i></button>
-          <button class="btn black num"><i>8</i></button>
-          <button class="btn black num"><i>9</i></button>
-          <button class="btn brown operator" data-operator="x"><i>*</i></button>
+              <button class="btn black num"><i>7</i></button>
+              <button class="btn black num"><i>8</i></button>
+              <button class="btn black num"><i>9</i></button>
+              <button class="btn brown operator" data-operator="x">
+                <i>*</i>
+              </button>
 
-          <button class="btn black num"><i>4</i></button>
-          <button class="btn black num"><i>5</i></button>
-          <button class="btn black num"><i>6</i></button>
-          <button class="btn brown operator" data-operator="-"><i>-</i></button>
+              <button class="btn black num"><i>4</i></button>
+              <button class="btn black num"><i>5</i></button>
+              <button class="btn black num"><i>6</i></button>
+              <button class="btn brown operator" data-operator="-">
+                <i>-</i>
+              </button>
 
-          <button class="btn black num"><i>1</i></button>
-          <button class="btn black num"><i>2</i></button>
-          <button class="btn black num"><i>3</i></button>
-          <button class="btn brown operator" data-operator="+"><i>+</i></button>
+              <button class="btn black num"><i>1</i></button>
+              <button class="btn black num"><i>2</i></button>
+              <button class="btn black num"><i>3</i></button>
+              <button class="btn brown operator" data-operator="+">
+                <i>+</i>
+              </button>
 
-          <button class="btn black num"><i>0</i></button>
-          <button class="btn black num"><i>.</i></button>
-          <button class="btn orange" id="equal"><i>=</i></button>
+              <button class="btn black num"><i>0</i></button>
+              <button class="btn black num"><i>.</i></button>
+              <button class="btn orange" id="equal">
+                <i>=</i>
+                <img src="assets/odinLogo.svg" id="logo-image" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
+    <div class="footer">
+      <a
+        href="https://github.com/gandarufu?tab=repositories"
+        target="_blank"
+        class="footer-link"
+        referrerpolicy="no-referrer"
+      >
+        <img src="assets/github-mark.svg" alt="GitHub" />
+        gandarufu
+      </a>
+    </div>
     <audio id="audio" src="assets/click.mp3"></audio>
   </body>
 </html>
